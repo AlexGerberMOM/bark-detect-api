@@ -4,12 +4,19 @@ import cv2
 import onnxruntime as ort
 from fastapi import FastAPI, File, UploadFile
 from fastapi.staticfiles import StaticFiles
+import gc
 
 app = FastAPI(title="BarkRefined_ONNX_API")
 
 STATIC_DIR = os.path.join(os.getcwd(), "static")
 os.makedirs(STATIC_DIR, exist_ok=True)
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
+
+opts = ort.SessionOptions()
+opts.intra_op_num_threads = 1
+opts.inter_op_num_threads = 1
+opts.execution_mode = ort.ExecutionMode.ORT_SEQUENTIAL
+opts.enable_cpu_mem_arena = False
 
 TARGET_SIZE_1 = 256
 RADIUS_UPSCALE_FACTOR = 1.1
@@ -20,8 +27,10 @@ PIXEL_TO_CM_RATIO = 0.05
 GLOBAL_MEAN = np.array([0.485, 0.456, 0.406], dtype=np.float32)
 GLOBAL_STD = np.array([0.229, 0.224, 0.225], dtype=np.float32)
 
-ORT_SESSION_ST1 = ort.InferenceSession("model_st1.onnx", providers=['CPUExecutionProvider'])
-ORT_SESSION_ST2 = ort.InferenceSession("model_st2.onnx", providers=['CPUExecutionProvider'])
+ORT_SESSION_ST1 = ort.InferenceSession("model_st1.onnx", sess_options=opts, providers=['CPUExecutionProvider'])
+gc.collect()
+ORT_SESSION_ST2 = ort.InferenceSession("model_st2.onnx", sess_options=opts, providers=['CPUExecutionProvider'])
+gc.collect()
 
 def preprocess_onnx(img_bgr, target_size):
     img_rgb = cv2.resize(cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB), (target_size, target_size))

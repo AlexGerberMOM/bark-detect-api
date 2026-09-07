@@ -103,7 +103,16 @@ async def predict_wood_biomass(file: UploadFile = File(...)):
             "result_image_name": out_fname
         }
     except Exception as e:
-        return {"status": "error", "message": str(e)}
+        return {
+            "status": "error", 
+            "message": str(e),
+            "bark_percentage": 0.0,
+            "pith_percentage": 0.0,
+            "diameter_avg_cm": 0.0,
+            "diameter_max_cm": 0.0,
+            "diameter_min_cm": 0.0,
+            "result_image_name": "error_placeholder.png" # Заглушка спасет Котлин от вылета
+        }
 
 if __name__ == "__main__":
     import uvicorn

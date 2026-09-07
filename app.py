@@ -137,6 +137,9 @@ async def predict_wood_biomass(file: UploadFile = File(...)):
         
         out_fname = f"res_{file.filename}.png"
         cv2.imwrite(os.path.join(STATIC_DIR, out_fname), blended)
+
+        del clean_img, img_rgb_st1, tensor_st1, mask_st1, mask_orig_st1, dist_transform, padded_img, polar_raw, polar_oriented, polar_final, tensor_st2, mask_st2, pol_mask_resized, pol_mask_native, y_c, x_c, dx, dy, r_matrix, theta_matrix, map_y, map_x, inverse_mask, ray_thicknesses, col_mask, blended
+        gc.collect()
         
         return {
             "status": "success", "bark_percentage": bark_pct, "pith_percentage": pith_pct,

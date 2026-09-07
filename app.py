@@ -68,7 +68,7 @@ async def predict_wood_biomass(file: UploadFile = File(...)):
         
         # --- СТУПЕНЬ 1 ---
         input_tensor_st1 = preprocess_onnx(clean_img, TARGET_SIZE_1)
-        ort_inputs_st1 = {ORT_SESSION_ST1.get_inputs().name: input_tensor_st1}
+        ort_inputs_st1 = {ORT_SESSION_ST1.get_inputs()[0].name: input_tensor_st1}
         pred_st1 = ORT_SESSION_ST1.run(None, ort_inputs_st1).squeeze(0).squeeze(0)
         
         mask_st1 = (sigmoid(pred_st1) > 0.5).astype(np.uint8) * 255

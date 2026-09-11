@@ -7,6 +7,10 @@
 
 ### Установка
 Клонирование репозитория:  
-` git clone https://github.com/AlexGerberMOM/bark-detect-api.git`
+` git clone https://github.com/AlexGerberMOM/bark-detect-api.git`  
 Установка зависимостей:  
-` pip install -r requirements.txt `
+` pip install -r requirements.txt `  
+
+### Запуск сервиса
+При развертывании на ПК через терминал  
+` python -m app.py `  
